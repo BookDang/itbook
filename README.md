@@ -37,3 +37,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ### Start date
 - 14/11/2023
+### Palette color
+- Reference linking: https://colorhunt.co/palette/00a9ff89cff3a0e9ffcdf5fd
