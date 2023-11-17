@@ -4,6 +4,7 @@ import '@/app/globals.css'
 import Layout from 'antd/es/layout/layout'
 import Sider from 'antd/es/layout/Sider'
 import BreadcrumbDashBoard from '@/components/dashboard/BreadcrumbDashBoard/page'
+import MenuDashboard from '@/components/dashboard/MenuDashboard/page'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,8 +22,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Layout style={{ minHeight: '100vh'}}>
-          <Sider theme={'light'} className='!bg-[#3A4D39]' collapsible>
-
+          <Sider theme={'light'} collapsedWidth={65} className='!bg-[#3A4D39]' collapsible>
+            <MenuDashboard />
           </Sider>
           <Layout style={{padding: '10px 15px'}}>
             <BreadcrumbDashBoard />
