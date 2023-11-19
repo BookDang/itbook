@@ -13,7 +13,8 @@ datasource db {
 model Category {
   id       Int        @id @default(autoincrement())
   name     String
-  tag      String
+  tags     Json?
+  slug     String     @unique
   parentId Int?
   parent   Category?  @relation("ChildCategories", fields: [parentId], references: [id])
   children Category[] @relation("ChildCategories")

@@ -1,11 +1,20 @@
-import { FC } from "react"
+"use client"
+
+import { FC, ReactNode, useState } from "react"
 import Menu, { MenuProps } from "antd/es/menu/menu"
 import { GiBookshelf } from "react-icons/gi"
 import { BiCategory } from "react-icons/bi"
+import _ from "lodash"
+import Link from "next/link"
 
 type MenuDashboardProp = {}
 
 const MenuDashboard: FC<MenuDashboardProp> = () => {
+  const [currentMenuItem, setCurrentMenuItem] = useState('1')
+  const onClickMenuItem: MenuProps['onClick'] = (e) => {
+    console.log('e', e);
+    setCurrentMenuItem(e.key);
+  };
   return (
     <div>
       <Menu
@@ -13,11 +22,11 @@ const MenuDashboard: FC<MenuDashboardProp> = () => {
           width: 'calc(100%)', height: 'calc(100vh - 48px)', 
           borderInlineEnd: 'none', borderBottom: '1px solid #f2f2f2'
         }}
-        defaultSelectedKeys={['1']}
-        defaultOpenKeys={['sub1']}
         mode="inline"
         theme="light"
         items={items}
+        selectedKeys={[currentMenuItem]}
+        onClick={onClickMenuItem}
       />
     </div>
   )
@@ -42,8 +51,10 @@ function getItem(
     type,
   } as MenuItem;
 }
-
-const items: MenuProps['items'] = [
-  getItem('Books', '1', <GiBookshelf />),
-  getItem('Categories', '2', <BiCategory />),
-];
+const MenuItemList: [ReactNode, string | number, ReactNode][] = [
+  [<Link href="/dashboard/books">Books</Link>, '1', <GiBookshelf />],
+  [<Link href="/dashboard/categories">Categories</Link>, '2', <BiCategory />],
+]
+const items: MenuProps['items'] = _.map(MenuItemList, (item) => {
+  return getItem(item[0], item[1], item[2])
+})
