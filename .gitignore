@@ -39,4 +39,4 @@ next-env.d.ts
 /prisma/migrations
 
 # package look
-package-lock.json
+*-lock.json
