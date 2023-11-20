@@ -20,9 +20,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <Layout style={{ minHeight: '100vh'}}>
-          <Sider theme={'light'} collapsedWidth={65} className='!bg-[#3A4D39]' collapsible>
+      <body className={`${inter.className}`} style={{margin: '0 !important'}}>
+        <Layout>
+          <Sider theme={'light'} collapsedWidth={65} collapsible>
             <MenuDashboard />
           </Sider>
           <Layout style={{padding: '10px 15px'}}>

@@ -16,10 +16,10 @@ const MenuDashboard: FC<MenuDashboardProp> = () => {
     setCurrentMenuItem(e.key);
   };
   return (
-    <div>
+    <div className="left-mennu">
       <Menu
         style={{ 
-          width: 'calc(100%)', height: 'calc(100vh - 48px)', 
+          width: '100%', height: 'calc(100vh - 65px)', 
           borderInlineEnd: 'none', borderBottom: '1px solid #f2f2f2'
         }}
         mode="inline"
