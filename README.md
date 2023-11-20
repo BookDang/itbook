@@ -45,3 +45,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 This command creates a new migration file based on the changes in your Prisma schema and applies the migration to the database.
 
 Alternatively, if you want to create a new migration manually before applying it, you can use the following command: `npx prisma migrate dev`
+
+## Packages used in the project
+  - lodash
+  - axios
+  - react-hook-form
+  - react-icons
+  - antd
+  - tailwind
