@@ -3,13 +3,8 @@
 import { FC, useEffect } from "react"
 import { Button, Form, Input, InputNumber, Select } from "antd"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
+import { FieldType } from "@/types/categorytypes"
 
-type FieldType = {
-  categoryname: string
-  categoryslug: string
-  categoryparent?: {}
-  categorysequence: number
-}
 type CategoryFormProp = {}
 
 const CategoryForm: FC<CategoryFormProp> = () => {

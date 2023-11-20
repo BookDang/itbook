@@ -47,9 +47,10 @@ This command creates a new migration file based on the changes in your Prisma sc
 Alternatively, if you want to create a new migration manually before applying it, you can use the following command: `npx prisma migrate dev`
 
 ## Packages used in the project
-  - lodash
-  - axios
-  - react-hook-form
+  - lodash*
+  - axios*
+  - react-hook-form*
   - react-icons
-  - antd
+  - antd*
   - tailwind
+  - prisma*
