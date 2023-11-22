@@ -1,17 +1,15 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import { PrismaClient } from '@prisma/client'
-import { sendApiResponse } from '@/helpers/apiResponse'
+import { PrismaClient } from "@prisma/client"
+import { FieldType } from "@/types/categorytypes"
 
 const prisma = new PrismaClient()
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export const handlerCreateCategory = async (formData: FieldType): Promise<boolean | number> => {
   try {
     // const users: User[] = await prisma.user.findMany()
-    // sendApiResponse(res, 200, users)
+    console.log('formData', formData)    
+    return true
   } catch (error) {
-    sendApiResponse(res, 500, { error: 'Internal Server Error' })
+    console.log(error)
+    return false
   }
 }

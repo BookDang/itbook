@@ -4,6 +4,7 @@ import { FC, useEffect } from "react"
 import { Button, Form, Input, InputNumber, Select } from "antd"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import { FieldType } from "@/types/categorytypes"
+import { createCategory } from "@/services/categoryService"
 
 type CategoryFormProp = {}
 
@@ -31,8 +32,9 @@ const CategoryForm: FC<CategoryFormProp> = () => {
     form.setFieldsValue({ categoryslug: categorySlugText });
   }, [watchCategoryName])
 
-  const onSubmit: SubmitHandler<FieldType> = (data) => {
-    console.log(data)
+  const onSubmit: SubmitHandler<FieldType> = async (data) => {
+    const res = await createCategory(data)
+    console.log('onSubmit', res)
   }
 
   return (
@@ -69,7 +71,7 @@ const CategoryForm: FC<CategoryFormProp> = () => {
             <Form.Item
               {...field}
               label="Category sequence"
-              // initialValue={field.value}
+              initialValue={field.value}
               wrapperCol={{ span: 10 }}
               rules={[
                 {
@@ -97,8 +99,10 @@ const CategoryForm: FC<CategoryFormProp> = () => {
             <Form.Item
               label="Parent category"
               wrapperCol={{ span: 6 }}
+              initialValue={field.value}
             >
-              <Select {...field} value={'1'}>
+              <Select {...field} value={'0'}>
+                <Select.Option value="0">None</Select.Option>
                 <Select.Option value="1">Javascript</Select.Option>
                 <Select.Option value="2">PHP</Select.Option>
               </Select>

@@ -1,7 +1,7 @@
 "use client"
 
 import { FC } from "react"
-import CategoryForm from "@/components/dashboard/Books/Form/Category/page"
+import CategoryForm from "@/components/dashboard/Categories/Form/page"
 
 type CategoryProp = {}
 
