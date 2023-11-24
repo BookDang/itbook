@@ -1,7 +1,7 @@
 type FieldType = {
   categoryname: string
   categoryslug: string
-  categoryparent?: {}
+  categoryparent?: number
   categorysequence: number
 }
 

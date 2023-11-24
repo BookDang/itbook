@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,15 +8,16 @@ datasource db {
 }
 
 model Category {
-  id       Int        @id @default(autoincrement())
-  name     String
-  tags     Json?
-  slug     String     @unique
-  parentId Int?
-  parent   Category?  @relation("ChildCategories", fields: [parentId], references: [id])
-  children Category[] @relation("ChildCategories")
-  sequence Int        @default(1)
+  id          Int       @id @default(autoincrement())
+  name        String
+  tags        Json?
+  slug        String    @unique
+  sequence    Int       @default(1)
+  successorId Int?      @unique
+  predecessor Category? @relation("ChildCategories", fields: [successorId], references: [id])
+  successor   Category? @relation("ChildCategories")
 
-  @@index([parentId])
+  @@index([successorId])
   @@index([name])
+  @@index([slug])
 }

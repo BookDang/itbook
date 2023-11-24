@@ -5,6 +5,8 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.json() 
     const result = await handlerCreateCategory(formData)
+    console.log('result', result);
+    
     return new Response("Create successful!", {
       status: 200,
       statusText: ''

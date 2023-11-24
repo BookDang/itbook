@@ -19,7 +19,7 @@ const CategoryForm: FC<CategoryFormProp> = () => {
     defaultValues: {
       categoryname: 'React native',
       categoryslug: '',
-      categoryparent: 0,
+      categoryparent: 1,
       categorysequence: 1,
     }
   })
@@ -101,10 +101,8 @@ const CategoryForm: FC<CategoryFormProp> = () => {
               wrapperCol={{ span: 6 }}
               initialValue={field.value}
             >
-              <Select {...field} value={'0'}>
-                <Select.Option value="0">None</Select.Option>
-                <Select.Option value="1">Javascript</Select.Option>
-                <Select.Option value="2">PHP</Select.Option>
+              <Select {...field} value={'1'}>
+                <Select.Option value="1">None</Select.Option>
               </Select>
             </Form.Item>
           )}
