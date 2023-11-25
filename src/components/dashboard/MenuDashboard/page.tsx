@@ -20,7 +20,7 @@ const MenuDashboard: FC<MenuDashboardProp> = () => {
     if (itemMenu?.position) {
       setCurrentMenuItem(itemMenu?.position)
     }
-  }, [])
+  }, [pathname])
 
   const onClickMenuItem: MenuProps['onClick'] = (e) => {
     setCurrentMenuItem(e.key)
@@ -67,9 +67,9 @@ const menuItems = [
 ]
 const MenuItemList: [ReactNode, string | number, ReactNode][] = _.map(menuItems, (item) => {
   return [
-    <Link href={item.href}>{item.label}</Link>,
+    <Link key={item.position} href={item.href}>{item.label}</Link>,
     item.position,
-    <Icon component={item.icon} />
+    <Icon key={item.position} component={item.icon} />
   ]
 })
 const items: MenuProps['items'] = _.map(MenuItemList, (item) => {

@@ -7,3 +7,5 @@ const Books: FC<BooksProp> = () => {
     <></>
   )
 }
+
+export default Books

@@ -35,7 +35,7 @@ const CategoryForm: FC<CategoryFormProp> = () => {
     const categorySlugText = watchCategoryName.toLowerCase().replace(' ', '_')
     setValue('categoryslug', categorySlugText)
     form.setFieldsValue({ categoryslug: categorySlugText });
-  }, [watchCategoryName])
+  }, [watchCategoryName, form, setValue])
 
   const onSubmit: SubmitHandler<FieldType> = async (data) => {
     const res = await createCategory(data)

@@ -1,7 +1,9 @@
-"use client"
-
 import { FC } from "react"
 import CategoryForm from "@/components/dashboard/Categories/Form/page"
+
+export const metadata = {
+  title: 'Category | Dashboard',
+}
 
 type CategoryProp = {}
 
