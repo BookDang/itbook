@@ -8,7 +8,7 @@ type CategoryProp = {}
 const Category: FC<CategoryProp> = () => {
   return (
     <>
-      <div className="border border-solid border-gray-500 rounded p-2 pt-7 add-new-category">
+      <div className="border border-solid border-gray-300 rounded p-2 pt-7 add-new-category">
         <CategoryForm />
       </div>
     </>

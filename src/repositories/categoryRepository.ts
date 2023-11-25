@@ -11,7 +11,9 @@ type CreateCategory = {
   sequence: number
 }
 
-export const handlerCreateCategory = async (formData: FieldType): Promise<CreateCategory | boolean> => {
+export const handlerCreateCategory = async (
+  formData: FieldType
+): Promise<CreateCategory | Prisma.PrismaClientKnownRequestError> => {
   try {
     const createCategory = await prisma.category.create({
       data: {
@@ -30,9 +32,13 @@ export const handlerCreateCategory = async (formData: FieldType): Promise<Create
         tags: undefined,
       },
     })
-    return createCategory || false
-  } catch (error: unknown) {
-    console.log(error)
-    return false
+    return createCategory
+  } catch (error: any) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        console.log("There is a unique constraint violation.")
+      }
+    }
+    return error
   }
 }

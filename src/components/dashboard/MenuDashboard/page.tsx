@@ -1,25 +1,35 @@
 "use client"
 
-import { FC, ReactNode, useState } from "react"
+import { FC, ReactNode, useEffect, useState } from "react"
 import Menu, { MenuProps } from "antd/es/menu/menu"
 import { GiBookshelf } from "react-icons/gi"
 import { BiCategory } from "react-icons/bi"
+import Icon from '@ant-design/icons';
 import _ from "lodash"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 type MenuDashboardProp = {}
 
 const MenuDashboard: FC<MenuDashboardProp> = () => {
-  const [currentMenuItem, setCurrentMenuItem] = useState('1')
+  const [currentMenuItem, setCurrentMenuItem] = useState('0')
+
+  const pathname = usePathname()
+  useEffect(() => {
+    const itemMenu = _.find(menuItems, (item) => item.href === pathname)
+    if (itemMenu?.position) {
+      setCurrentMenuItem(itemMenu?.position)
+    }
+  }, [])
+
   const onClickMenuItem: MenuProps['onClick'] = (e) => {
-    console.log('e', e);
-    setCurrentMenuItem(e.key);
+    setCurrentMenuItem(e.key)
   };
   return (
     <div className="left-mennu">
       <Menu
-        style={{ 
-          width: '100%', height: 'calc(100vh - 65px)', 
+        style={{
+          width: '100%', height: 'calc(100vh - 48px)',
           borderInlineEnd: 'none', borderBottom: '1px solid #f2f2f2'
         }}
         mode="inline"
@@ -51,10 +61,17 @@ function getItem(
     type,
   } as MenuItem;
 }
-const MenuItemList: [ReactNode, string | number, ReactNode][] = [
-  [<Link href="/dashboard/books">Books</Link>, '1', <GiBookshelf />],
-  [<Link href="/dashboard/categories">Categories</Link>, '2', <BiCategory />],
+const menuItems = [
+  { href: '/dashboard/books', label: 'Books', icon: GiBookshelf, position: '1' },
+  { href: '/dashboard/categories', label: 'Categories', icon: BiCategory, position: '2' },
 ]
+const MenuItemList: [ReactNode, string | number, ReactNode][] = _.map(menuItems, (item) => {
+  return [
+    <Link href={item.href}>{item.label}</Link>,
+    item.position,
+    <Icon component={item.icon} />
+  ]
+})
 const items: MenuProps['items'] = _.map(MenuItemList, (item) => {
   return getItem(item[0], item[1], item[2])
 })

@@ -2,22 +2,27 @@
 
 import { FC, useEffect } from "react"
 import { Button, Form, Input, InputNumber, Select } from "antd"
+import { notification } from 'antd';
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import { FieldType } from "@/types/categorytypes"
 import { createCategory } from "@/services/categoryService"
+import { openNotification } from "@/helpers/notification.helper"
+import { STATUS } from "@/constants/statusContants"
 
 type CategoryFormProp = {}
 
 const CategoryForm: FC<CategoryFormProp> = () => {
+  const [api, contextHolder] = notification.useNotification()
   const [form] = Form.useForm()
   const {
     handleSubmit,
     control,
     watch,
     setValue,
+    formState: {isDirty, isValid}
   } = useForm<FieldType>({
     defaultValues: {
-      categoryname: 'React native',
+      categoryname: '',
       categoryslug: '',
       categoryparent: 1,
       categorysequence: 1,
@@ -34,7 +39,11 @@ const CategoryForm: FC<CategoryFormProp> = () => {
 
   const onSubmit: SubmitHandler<FieldType> = async (data) => {
     const res = await createCategory(data)
-    console.log('onSubmit', res)
+    if (res.status === 201) {
+      openNotification(api, res.statusText, STATUS.SUCCESS)
+    } else {
+      openNotification(api, 'openNotification', STATUS.ERROR)
+    }
   }
 
   return (
@@ -122,7 +131,7 @@ const CategoryForm: FC<CategoryFormProp> = () => {
           )}
         />
         <Form.Item wrapperCol={{ offset: 5, span: 16 }}>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" disabled={!isDirty || !isValid}>
             Submit
           </Button>
         </Form.Item>

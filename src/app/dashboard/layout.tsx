@@ -25,7 +25,7 @@ export default function RootLayout({
           <Sider theme={'light'} collapsedWidth={65} collapsible>
             <MenuDashboard />
           </Sider>
-          <Layout style={{padding: '10px 15px'}}>
+          <Layout style={{padding: '10px 15px'}} className='h-screen'>
             <BreadcrumbDashBoard />
             {children}
           </Layout>
