@@ -3,7 +3,6 @@
 import { FC, ReactNode } from "react"
 import { usePathname } from "next/navigation"
 import Breadcrumb from "antd/es/breadcrumb/Breadcrumb"
-import Link from "next/link"
 
 type BreadcrumbDashBoardProp = {}
 const BreadcrumbDashBoard: FC<BreadcrumbDashBoardProp> = () => {

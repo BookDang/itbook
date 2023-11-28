@@ -5,49 +5,56 @@ import { Button, Form, Input, InputNumber, Select } from "antd"
 import { notification } from 'antd';
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import { FieldType } from "@/types/categorytypes"
-import { createCategory } from "@/services/categoryService"
+import CategoryService from "@/services/categoryService"
 import { openNotification } from "@/helpers/notification.helper"
 import { STATUS } from "@/constants/statusContants"
+import { NotificationType } from "@/types/antdtypes";
 
 type CategoryFormProp = {}
-
+const defaultValues = {
+  categoryname: '',
+  categoryslug: '',
+  categoryparent: 1,
+  categorysequence: 1,
+}
 const CategoryForm: FC<CategoryFormProp> = () => {
   const [api, contextHolder] = notification.useNotification()
   const [form] = Form.useForm()
   const {
     handleSubmit,
+    reset,
     control,
     watch,
     setValue,
-    formState: {isDirty, isValid}
+    formState: { isDirty, isValid, isSubmitting }
   } = useForm<FieldType>({
-    defaultValues: {
-      categoryname: '',
-      categoryslug: '',
-      categoryparent: 1,
-      categorysequence: 1,
-    }
+    defaultValues,
   })
 
   const watchCategoryName: string = watch("categoryname") || ''
 
   useEffect(() => {
-    const categorySlugText = watchCategoryName.toLowerCase().replace(' ', '_')
+    const categorySlugText = watchCategoryName.toLowerCase().replaceAll(' ', '_')
     setValue('categoryslug', categorySlugText)
-    form.setFieldsValue({ categoryslug: categorySlugText });
+    form.setFieldsValue({ categoryslug: categorySlugText })
   }, [watchCategoryName, form, setValue])
 
   const onSubmit: SubmitHandler<FieldType> = async (data) => {
-    const res = await createCategory(data)
+    const res = await CategoryService.createCategory(data)
     if (res.status === 201) {
-      openNotification(api, res.statusText, STATUS.SUCCESS)
-    } else {
-      openNotification(api, 'openNotification', STATUS.ERROR)
+      openNotification(api, res.statusText, STATUS.SUCCESS as NotificationType)
+      reset()
+    } else if (res.status === 422) {
+      openNotification(api, res.statusText, STATUS.WARNING as NotificationType)
+    }
+    else {
+      openNotification(api, res.statusText, STATUS.ERROR as NotificationType)
     }
   }
 
   return (
     <>
+      {contextHolder}
       <Form
         name="basic"
         form={form}
@@ -65,7 +72,7 @@ const CategoryForm: FC<CategoryFormProp> = () => {
             <Form.Item
               {...field}
               label="Category name"
-              // initialValue={field.value}
+              initialValue={field.value}
               wrapperCol={{ span: 10 }}
               rules={[{ required: true, message: 'Please enter category name!' }]}
             >
@@ -106,6 +113,7 @@ const CategoryForm: FC<CategoryFormProp> = () => {
           control={control}
           render={({ field: { ref, ...field } }) => (
             <Form.Item
+              {...field}
               label="Parent category"
               wrapperCol={{ span: 6 }}
               initialValue={field.value}
@@ -125,13 +133,14 @@ const CategoryForm: FC<CategoryFormProp> = () => {
               {...field}
               label="Category slug"
               wrapperCol={{ span: 10 }}
+              initialValue={field.value}
             >
               <Input readOnly className="cursor-no-drop" />
             </Form.Item>
           )}
         />
         <Form.Item wrapperCol={{ offset: 5, span: 16 }}>
-          <Button type="primary" htmlType="submit" disabled={!isDirty || !isValid}>
+          <Button type="primary" htmlType="submit" disabled={!isDirty || !isValid || isSubmitting}>
             Submit
           </Button>
         </Form.Item>

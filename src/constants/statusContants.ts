@@ -3,4 +3,5 @@ export const STATUS = {
   SUCCESSFUL: 'successful',
   ERROR: 'error',
   INFO: 'info',
+  WARNING: 'warning',
 }
