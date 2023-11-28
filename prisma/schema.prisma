@@ -10,7 +10,7 @@ datasource db {
 model Category {
   id          Int       @id @default(autoincrement())
   name        String
-  tags        Json?
+  tags        Json?     @default("{}")
   slug        String    @unique
   sequence    Int       @default(1)
   successorId Int?      @unique

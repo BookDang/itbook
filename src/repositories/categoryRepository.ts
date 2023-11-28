@@ -1,19 +1,11 @@
-import { Prisma, PrismaClient } from "@prisma/client"
+import { Category, Prisma, PrismaClient } from "@prisma/client"
 import { FieldType } from "@/types/categorytypes"
 
 const prisma = new PrismaClient()
-type CreateCategory = {
-  id: number
-  name: string
-  tags: Prisma.JsonValue
-  slug: string
-  successorId: number | null
-  sequence: number
-}
 
 export const handlerCreateCategory = async (
   formData: FieldType
-): Promise<CreateCategory | Prisma.PrismaClientKnownRequestError | boolean> => {
+): Promise<Category | Prisma.PrismaClientKnownRequestError | boolean> => {
   try {
     const createCategory = await prisma.category.create({
       data: {
@@ -41,5 +33,18 @@ export const handlerCreateCategory = async (
       }
     }
     return false
+  }
+}
+
+export const handlerGetAllCategories = async (): Promise<Category[]> => {
+  try {
+    const categories = await prisma.category.findMany({
+      where: {
+        id: { gt: 1 }
+      }
+    })
+    return categories
+  } catch (error) {
+    return []
   }
 }
