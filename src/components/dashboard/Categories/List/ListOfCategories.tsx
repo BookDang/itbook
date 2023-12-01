@@ -10,7 +10,6 @@ import Spin from "antd/es/spin"
 type ListOfCategoriesProp = {}
 
 const ListOfCategories: FC<ListOfCategoriesProp> = (): ReactNode => {
-  const columns: ColumnsType<Category> = [{}]
   const [categories, setCategories] = useState<Category[] | null>(null)
 
   useEffect(() => {
@@ -18,13 +17,11 @@ const ListOfCategories: FC<ListOfCategoriesProp> = (): ReactNode => {
       .then((res) => {
         setCategories(res)
       })
-      .finally(() => {
-
-      })
+      .finally(() => {})
   }, [])
 
   return (
-    <div className="wrap-list-categories h-[calc(100vh_-_80px)] relative">
+    <div className="wrap-list-categories h-full relative">
       {
         categories === null ?
           <EmptyData>
@@ -44,6 +41,7 @@ export default ListOfCategories
 type EmptyDataProp = {
   children: ReactNode
 }
+
 const EmptyData: FC<EmptyDataProp> = ({ children }) => {
   return (
     <div className="w-full h-full flex justify-center items-center">
