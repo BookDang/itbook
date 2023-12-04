@@ -1,7 +1,7 @@
 import axios from "axios"
-import { FieldType } from "@/types/categorytypes"
+import { Category as CategoryDB, FieldType } from "@/types/categorytypes"
 
-export const createCategory = async (categoryData: FieldType): Promise<any> => {
+const createCategory = async (categoryData: FieldType): Promise<any> => {
   try {
     
     const response = await axios.post(`/api/category`, categoryData, {
@@ -16,8 +16,19 @@ export const createCategory = async (categoryData: FieldType): Promise<any> => {
   }
 }
 
+const getCategories = async (): Promise<CategoryDB[]> => {
+  try {
+    const response = await axios.get('/api/categories')
+    if (response.status !== 200) return []
+    return response.data
+  } catch (error: any) {
+    return []
+  }
+}
+
 const CategoryService = {
-  createCategory
+  createCategory,
+  getCategories
 }
 
 export default CategoryService

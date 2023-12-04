@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 
-export const nextResponseJson = (
-  result: any,
+export const nextResponseJson = <T>(
+  result: T,
   options: {
     status: number | undefined
     statusText: string

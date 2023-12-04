@@ -1,34 +1,17 @@
-import { Prisma, PrismaClient } from "@prisma/client"
-import { FieldType } from "@/types/categorytypes"
+import { Category, Prisma, PrismaClient } from "@prisma/client"
+import { Category as CategoryDB, FieldType } from "@/types/categorytypes"
 
 const prisma = new PrismaClient()
-type CreateCategory = {
-  id: number
-  name: string
-  tags: Prisma.JsonValue
-  slug: string
-  successorId: number | null
-  sequence: number
-}
 
 export const handlerCreateCategory = async (
   formData: FieldType
-): Promise<CreateCategory | Prisma.PrismaClientKnownRequestError | boolean> => {
+): Promise<Category | Prisma.PrismaClientKnownRequestError | boolean> => {
   try {
     const createCategory = await prisma.category.create({
       data: {
         name: formData.categoryname,
         slug: formData.categoryslug,
-        // successor: {
-        //   connect: {
-        //     id: formData.categoryparent,
-        //   },
-        // },
-        predecessor: {
-          connect: {
-            id: 1,
-          },
-        },
+        successorId: formData.categoryparent as number,
         tags: undefined,
       },
     })
@@ -41,5 +24,25 @@ export const handlerCreateCategory = async (
       }
     }
     return false
+  }
+}
+
+export const handlerGetAllCategories = async (): Promise<CategoryDB[]> => {
+  try {
+    const categories: CategoryDB[] = await prisma.category.findMany({
+      where: {
+        id: { gt: 1 }
+      },
+      include: {
+        predecessor: {
+          select: {
+            name: true
+          }
+        }
+      }
+    })
+    return categories
+  } catch (error) {
+    return []
   }
 }

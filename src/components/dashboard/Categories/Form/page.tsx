@@ -44,6 +44,9 @@ const CategoryForm: FC<CategoryFormProp> = () => {
     if (res.status === 201) {
       openNotification(api, res.statusText, STATUS.SUCCESS as NotificationType)
       reset()
+      setTimeout(() => {
+        form.resetFields()
+      }, 100)
     } else if (res.status === 422) {
       openNotification(api, res.statusText, STATUS.WARNING as NotificationType)
     }
@@ -56,7 +59,7 @@ const CategoryForm: FC<CategoryFormProp> = () => {
     <>
       {contextHolder}
       <Form
-        name="basic"
+        name="category_form"
         form={form}
         labelCol={{ span: 5 }}
         wrapperCol={{ span: 12 }}
@@ -64,6 +67,7 @@ const CategoryForm: FC<CategoryFormProp> = () => {
         initialValues={{ remember: true }}
         onFinish={handleSubmit(onSubmit)}
         autoComplete="off"
+        className="mt-8"
       >
         <Controller
           name="categoryname"
@@ -118,8 +122,8 @@ const CategoryForm: FC<CategoryFormProp> = () => {
               wrapperCol={{ span: 6 }}
               initialValue={field.value}
             >
-              <Select {...field} value={'1'}>
-                <Select.Option value="1">None</Select.Option>
+              <Select {...field} value={1}>
+                <Select.Option value={1}>None</Select.Option>
               </Select>
             </Form.Item>
           )}

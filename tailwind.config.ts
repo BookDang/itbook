@@ -16,6 +16,7 @@ const config: Config = {
   },
   plugins: [],
   corePlugins: {
+    // prevent the effect of the layout.css 
     preflight: false,
   },
 }
