@@ -1,5 +1,5 @@
 import { FC } from "react"
-import ListOfCategories from "@/components/dashboard/Categories/List/ListOfCategories"
+import ListOfCategories from "@/components/dashboard/Categories/List/CategoryContainer"
 
 export const metadata = {
   title: 'Category | Dashboard',

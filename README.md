@@ -58,3 +58,4 @@ To seed the database, run the db seed CLI command: `npx prisma db seed`
   - antd*
   - tailwind
   - prisma*
+  - Redux Toolkit

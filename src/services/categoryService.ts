@@ -1,6 +1,5 @@
 import axios from "axios"
-import type { Category } from '@prisma/client'
-import { FieldType } from "@/types/categorytypes"
+import { Category as CategoryDB, FieldType } from "@/types/categorytypes"
 
 const createCategory = async (categoryData: FieldType): Promise<any> => {
   try {
@@ -17,7 +16,7 @@ const createCategory = async (categoryData: FieldType): Promise<any> => {
   }
 }
 
-const getCategories = async (): Promise<Category[]> => {
+const getCategories = async (): Promise<CategoryDB[]> => {
   try {
     const response = await axios.get('/api/categories')
     if (response.status !== 200) return []

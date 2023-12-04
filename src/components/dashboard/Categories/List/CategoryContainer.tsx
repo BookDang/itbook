@@ -1,23 +1,24 @@
 'use client'
 
 import Empty from "antd/es/empty"
-import { ColumnsType } from "antd/es/table"
 import { FC, ReactNode, useEffect, useState } from "react"
-import type { Category } from '@prisma/client'
 import CategoryService from "@/services/categoryService"
 import Spin from "antd/es/spin"
+import EmptyData from "@/components/dashboard/Categories/List/EmptyData"
+import Categories from "@/components/dashboard/Categories/List/Categoies"
+import { Category as CategoryDB } from "@/types/categorytypes"
 
-type ListOfCategoriesProp = {}
+type ContainerCategoriesProp = {}
 
-const ListOfCategories: FC<ListOfCategoriesProp> = (): ReactNode => {
-  const [categories, setCategories] = useState<Category[] | null>(null)
+const CategoryContainer: FC<ContainerCategoriesProp> = (): ReactNode => {
+  const [categories, setCategories] = useState<CategoryDB[] | null>(null)
 
   useEffect(() => {
     CategoryService.getCategories()
       .then((res) => {
         setCategories(res)
       })
-      .finally(() => {})
+      .finally(() => { })
   }, [])
 
   return (
@@ -30,22 +31,12 @@ const ListOfCategories: FC<ListOfCategoriesProp> = (): ReactNode => {
           : categories?.length === 0 ?
             <EmptyData>
               <Empty />
-            </EmptyData> : ''
+            </EmptyData> : (
+              <Categories categories={categories} />
+            )
       }
     </div>
   )
 }
 
-export default ListOfCategories
-
-type EmptyDataProp = {
-  children: ReactNode
-}
-
-const EmptyData: FC<EmptyDataProp> = ({ children }) => {
-  return (
-    <div className="w-full h-full flex justify-center items-center">
-      {children}
-    </div>
-  )
-}
+export default CategoryContainer

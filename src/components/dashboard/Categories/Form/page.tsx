@@ -122,8 +122,8 @@ const CategoryForm: FC<CategoryFormProp> = () => {
               wrapperCol={{ span: 6 }}
               initialValue={field.value}
             >
-              <Select {...field} value={'1'}>
-                <Select.Option value="1">None</Select.Option>
+              <Select {...field} value={1}>
+                <Select.Option value={1}>None</Select.Option>
               </Select>
             </Form.Item>
           )}
