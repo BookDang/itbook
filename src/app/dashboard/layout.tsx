@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google'
 import '@/app/globals.css'
 import Layout from 'antd/es/layout/layout'
 import Sider from 'antd/es/layout/Sider'
-import BreadcrumbDashBoard from '@/components/dashboard/BreadcrumbDashBoard/page'
+import BreadcrumbDash from '@/components/dashboard/Breadcrumb/page'
 import MenuDashboard from '@/components/dashboard/MenuDashboard/page'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -26,7 +26,7 @@ export default function DashboardLayout({
             <MenuDashboard />
           </Sider>
           <Layout style={{padding: '10px 15px'}} className='h-screen'>
-            <BreadcrumbDashBoard />
+            <BreadcrumbDash />
             {children}
           </Layout>
         </Layout>

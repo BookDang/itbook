@@ -1,14 +1,15 @@
 "use client"
 
-import { FC, useEffect } from "react"
+import { FC, useEffect, useState } from "react"
 import { Button, Form, Input, InputNumber, Select } from "antd"
 import { notification } from 'antd';
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
+import { NotificationType } from "@/types/antdtypes"
 import { FieldType } from "@/types/categorytypes"
 import CategoryService from "@/services/categoryService"
 import { openNotification } from "@/helpers/notification.helper"
 import { STATUS } from "@/constants/statusContants"
-import { NotificationType } from "@/types/antdtypes";
+import { Category as CategoryDB } from "@/types/categorytypes"
 
 type CategoryFormProp = {}
 const defaultValues = {
@@ -20,6 +21,16 @@ const defaultValues = {
 const CategoryForm: FC<CategoryFormProp> = () => {
   const [api, contextHolder] = notification.useNotification()
   const [form] = Form.useForm()
+  const [categories, setCategories] = useState<CategoryDB[] | null>(null)
+
+  useEffect(() => {
+    CategoryService.getCategories()
+      .then((res) => {
+        setCategories(res)
+      })
+      .finally(() => { })
+  }, [])
+
   const {
     handleSubmit,
     reset,
@@ -123,7 +134,16 @@ const CategoryForm: FC<CategoryFormProp> = () => {
               initialValue={field.value}
             >
               <Select {...field} value={1}>
-                <Select.Option value={1}>None</Select.Option>
+                <Select.Option value={1} key={0}>Root</Select.Option>
+                {
+                  categories?.map((item) => {
+                    return (
+                      <Select.Option value={item.id} key={item.id}>
+                        {item.name}
+                      </Select.Option>
+                    )
+                  })
+                }
               </Select>
             </Form.Item>
           )}
@@ -144,7 +164,9 @@ const CategoryForm: FC<CategoryFormProp> = () => {
           )}
         />
         <Form.Item wrapperCol={{ offset: 5, span: 16 }}>
-          <Button type="primary" htmlType="submit" disabled={!isDirty || !isValid || isSubmitting}>
+          <Button type="primary" htmlType="submit"
+            disabled={!isDirty || !isValid || isSubmitting}
+          >
             Submit
           </Button>
         </Form.Item>

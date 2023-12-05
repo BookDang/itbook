@@ -1,7 +1,7 @@
 // import { Category } from "@prisma/client"
 import Table, { TablePaginationConfig } from "antd/es/table"
 import _ from "lodash"
-import { FC, memo, useEffect, useState } from "react"
+import { FC, memo, useState } from "react"
 import { Category as CategoryDB } from "@/types/categorytypes"
 
 const columns = [
