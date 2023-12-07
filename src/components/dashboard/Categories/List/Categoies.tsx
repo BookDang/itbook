@@ -17,8 +17,8 @@ const columns = [
   },
   {
     title: 'Parent',
-    dataIndex: 'successorName',
-    key: 'successorName',
+    dataIndex: 'parentName',
+    key: 'parentName',
   },
 ]
 
@@ -30,8 +30,8 @@ type DataType = {
   key: number
   name: string
   slug: string
-  successorId: number
-  successorName: string
+  parentId: number
+  parentName: string
 }
 
 const Categories: FC<CategoryProp> = memo((props) => {
@@ -42,8 +42,8 @@ const Categories: FC<CategoryProp> = memo((props) => {
         key: item.id,
         name: item.name,
         slug: item.slug,
-        successorName: item?.predecessor?.name || '',
-        successorId: item.successorId || 0,
+        parentName: item?.parent?.name || '',
+        parentId: item.parentId || 0,
       }
     })
   )

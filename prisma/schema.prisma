@@ -8,16 +8,16 @@ datasource db {
 }
 
 model Category {
-  id          Int       @id @default(autoincrement())
-  name        String
-  tags        Json?     @default("{}")
-  slug        String    @unique
-  sequence    Int       @default(1)
-  successorId Int?      @unique
-  predecessor Category? @relation("ChildCategories", fields: [successorId], references: [id])
-  successor   Category? @relation("ChildCategories")
+  id       Int    @id @default(autoincrement())
+  name     String
+  tags     Json?  @default("{}")
+  slug     String @unique
+  sequence Int    @default(1)
 
-  @@index([successorId])
+  parentId Int?
+  parent   Category?  @relation("CategoryChildren", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryChildren")
+
   @@index([name])
   @@index([slug])
 }

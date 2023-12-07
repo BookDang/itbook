@@ -11,7 +11,7 @@ export const handlerCreateCategory = async (
       data: {
         name: formData.categoryname,
         slug: formData.categoryslug,
-        successorId: formData.categoryparent as number,
+        parentId: formData.categoryparent as number,
         tags: undefined,
       },
     })
@@ -29,17 +29,26 @@ export const handlerCreateCategory = async (
 
 export const handlerGetAllCategories = async (): Promise<CategoryDB[]> => {
   try {
-    const categories: CategoryDB[] = await prisma.category.findMany({
+    const categories: any = await prisma.category.findMany({
       where: {
-        id: { gt: 1 }
+        id: { gt: 1 },
       },
       include: {
-        predecessor: {
+        parent: {
           select: {
-            name: true
+            name: true,
+            slug: true
           }
-        }
-      }
+        },
+        children: true
+        // {
+        //   include: {
+        //     children: {
+        //       include: { children: true },
+        //     },
+        //   },
+        // },
+      },
     })
     return categories
   } catch (error) {

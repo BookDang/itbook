@@ -8,7 +8,7 @@ async function main() {
       name: "Root",
       tags: undefined,
       slug: 'root',
-      successorId: null,
+      parentId: null,
       sequence: 1,
     },
   })

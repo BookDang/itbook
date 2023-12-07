@@ -7,7 +7,7 @@ type FieldType = {
   categorysequence: number
 }
 type Category = ({
-  predecessor: {
+  children: {
     name: string
   } | null
 } & {
@@ -16,7 +16,11 @@ type Category = ({
   tags: Prisma.JsonValue
   slug: string
   sequence: number
-  successorId: number | null
+  parent: {
+    name: string
+    slug: string
+  }
+  parentId: number | null
 })
 
 export type { FieldType, Category }
