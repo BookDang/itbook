@@ -1,26 +1,10 @@
 // import { Category } from "@prisma/client"
-import Table, { TablePaginationConfig } from "antd/es/table"
+import Table, { ColumnsType, TablePaginationConfig } from "antd/es/table"
 import _ from "lodash"
-import { FC, memo, useState } from "react"
+import { FC, memo, useMemo, useState } from "react"
+import { Button } from "antd"
+import { CiTrash } from "react-icons/ci"
 import { Category as CategoryDB } from "@/types/categorytypes"
-
-const columns = [
-  {
-    title: 'Category name',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: 'Slug',
-    dataIndex: 'slug',
-    key: 'slug',
-  },
-  {
-    title: 'Parent',
-    dataIndex: 'parentName',
-    key: 'parentName',
-  },
-]
 
 type TablePaginationPosition = NonNullable<TablePaginationConfig['position']>[number]
 type CategoryProp = {
@@ -34,24 +18,59 @@ type DataType = {
   parentName: string
 }
 
+const onHandleMapcategories = (categories: CategoryDB[]) => _.map(categories, (item: CategoryDB) => {
+  return {
+    key: item.id,
+    name: item.name,
+    slug: item.slug,
+    parentName: item?.parent?.name || '',
+    parentId: item.parentId || 0,
+  }
+})
+
 const Categories: FC<CategoryProp> = memo((props) => {
   const [bottom] = useState<TablePaginationPosition>('bottomRight')
-  const [categories] = useState<DataType[]>(
-    _.map(props.categories, (item) => {
-      return {
-        key: item.id,
-        name: item.name,
-        slug: item.slug,
-        parentName: item?.parent?.name || '',
-        parentId: item.parentId || 0,
+  const [categories] = useState<DataType[]>(onHandleMapcategories(props.categories))
+
+  const columns: ColumnsType<DataType> = useMemo(() => {
+    return [
+      {
+        title: 'Category name',
+        dataIndex: 'name',
+        key: 'name',
+      },
+      {
+        title: 'Slug',
+        dataIndex: 'slug',
+        key: 'slug',
+      },
+      {
+        title: 'Parent',
+        dataIndex: 'parentName',
+        key: 'parentName',
+      },
+      {
+        title: 'Actions',
+        key: 'action',
+        width: 100,
+        render: (text: any, record: any) => (
+          <Button shape="circle" icon={<CiTrash className="text-red-700" />}
+            onClick={() => onHandleDeleting(record)}
+          />
+        )
       }
-    })
-  )
+    ]
+  }, [])
+
+  const onHandleDeleting = (record: any) => {
+    console.log('Deleting', record)
+  }
 
   return (
-    <Table columns={columns}
-      pagination={{ size:"small", position: [bottom], defaultCurrent: 1, showQuickJumper: true }}
+    <Table
+      columns={columns}
       dataSource={categories}
+      pagination={{ size: "small", position: [bottom], defaultCurrent: 1, showQuickJumper: true }}
     />
   )
 })
