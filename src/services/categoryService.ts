@@ -26,9 +26,20 @@ const getCategories = async (): Promise<CategoryDB[]> => {
   }
 }
 
+const deleleCategory = async (categoryId: number): Promise<boolean> => {
+  try {
+    const response = await axios.delete('/api/category/' + categoryId)
+    if (response.status !== 200) return false
+    return true
+  } catch (error) {
+    return false
+  }
+}
+
 const CategoryService = {
   createCategory,
-  getCategories
+  getCategories,
+  deleleCategory
 }
 
 export default CategoryService
