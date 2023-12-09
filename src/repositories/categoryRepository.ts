@@ -31,27 +31,41 @@ export const handlerGetAllCategories = async (): Promise<CategoryDB[]> => {
   try {
     const categories: any = await prisma.category.findMany({
       where: {
-        id: { gt: 1 },
+        parentId: 1,
       },
       include: {
         parent: {
           select: {
             name: true,
-            slug: true
-          }
+            slug: true,
+          },
         },
-        children: true
-        // {
-        //   include: {
-        //     children: {
-        //       include: { children: true },
-        //     },
-        //   },
-        // },
+        children: {
+          include: {
+            children: {
+              include: {
+                children: true,
+              },
+            },
+          },
+        },
       },
     })
     return categories
   } catch (error) {
     return []
+  }
+}
+
+export const handlerDeleteCategory = async (categoryId: number) => {
+  try {
+    const deleteUser = await prisma.category.delete({
+      where: {
+        id: categoryId,
+      },
+    })
+    return deleteUser ? true : false
+  } catch (error) {
+    return false
   }
 }

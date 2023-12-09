@@ -7,31 +7,31 @@ import { CiTrash } from "react-icons/ci"
 import { Category as CategoryDB } from "@/types/categorytypes"
 
 type TablePaginationPosition = NonNullable<TablePaginationConfig['position']>[number]
+
+type DataType = CategoryDB & {
+  key: number
+}
+
 type CategoryProp = {
   categories: CategoryDB[]
 }
-type DataType = {
-  key: number
-  name: string
-  slug: string
-  parentId: number
-  parentName: string
-}
-
-const onHandleMapcategories = (categories: CategoryDB[]) => _.map(categories, (item: CategoryDB) => {
-  return {
-    key: item.id,
-    name: item.name,
-    slug: item.slug,
-    parentName: item?.parent?.name || '',
-    parentId: item.parentId || 0,
-  }
-})
 
 const Categories: FC<CategoryProp> = memo((props) => {
+  const onHandleMapcategories = (categories: CategoryDB[]): DataType[] => _.map(categories, (item: CategoryDB) => {
+    let childrenItems: any = null
+    if (item?.children?.length) {
+      childrenItems = onHandleMapcategories(item.children)
+    }
+    return {
+      ..._.cloneDeep(item),
+      key: item.id,
+      children: childrenItems,
+    }
+  })
+
   const [bottom] = useState<TablePaginationPosition>('bottomRight')
   const [categories] = useState<DataType[]>(onHandleMapcategories(props.categories))
-
+  
   const columns: ColumnsType<DataType> = useMemo(() => {
     return [
       {

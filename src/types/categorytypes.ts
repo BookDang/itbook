@@ -6,11 +6,8 @@ type FieldType = {
   categoryparent?: number | string
   categorysequence: number
 }
-type Category = ({
-  children: {
-    name: string
-  } | null
-} & {
+
+type CategoryChildren = {
   id: number
   name: string
   tags: Prisma.JsonValue
@@ -21,6 +18,10 @@ type Category = ({
     slug: string
   }
   parentId: number | null
-})
+}
+
+type Category = {
+  children?: CategoryChildren[]
+} & CategoryChildren
 
 export type { FieldType, Category }

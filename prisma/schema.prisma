@@ -15,7 +15,7 @@ model Category {
   sequence Int    @default(1)
 
   parentId  Int?
-  parent    Category?  @relation("CategoryChildren", fields: [parentId], references: [id])
+  parent    Category?  @relation("CategoryChildren", fields: [parentId], references: [id], onDelete: Cascade)
   children  Category[] @relation("CategoryChildren")
   deleted   DateTime?
   updatedAt DateTime   @updatedAt()
