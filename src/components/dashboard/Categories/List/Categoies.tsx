@@ -2,9 +2,16 @@
 import Table, { ColumnsType, TablePaginationConfig } from "antd/es/table"
 import _ from "lodash"
 import { FC, memo, useMemo, useState } from "react"
-import { Button } from "antd"
+import { Button, notification } from "antd"
 import { CiTrash } from "react-icons/ci"
+import { IoWarningOutline } from "react-icons/io5"
+import { NotificationType } from "@/types/antdtypes"
 import { Category as CategoryDB } from "@/types/categorytypes"
+import ConfirmModal from "@/components/ConfirmModal"
+import Modal from "antd"
+import CategoryService from "@/services/categoryService"
+import { openNotification } from "@/helpers/notification.helper"
+import { STATUS } from "@/constants/statusContants"
 
 type TablePaginationPosition = NonNullable<TablePaginationConfig['position']>[number]
 
@@ -17,21 +24,26 @@ type CategoryProp = {
 }
 
 const Categories: FC<CategoryProp> = memo((props) => {
-  const onHandleMapcategories = (categories: CategoryDB[]): DataType[] => _.map(categories, (item: CategoryDB) => {
-    let childrenItems: any = null
-    if (item?.children?.length) {
-      childrenItems = onHandleMapcategories(item.children)
-    }
-    return {
-      ..._.cloneDeep(item),
-      key: item.id,
-      children: childrenItems,
-    }
-  })
+  const [api, contextHolder] = notification.useNotification()
+  const onHandleMapcategories = useMemo(
+    () => (
+      categories: CategoryDB[]): DataType[] => _.map(categories, (item: CategoryDB) => {
+        let childrenItems: any = null
+        if (item?.children?.length) {
+          childrenItems = onHandleMapcategories(item.children)
+        }
+        return {
+          ..._.cloneDeep(item),
+          key: item.id,
+          children: childrenItems,
+        }
+      }
+      ), [])
 
   const [bottom] = useState<TablePaginationPosition>('bottomRight')
-  const [categories] = useState<DataType[]>(onHandleMapcategories(props.categories))
-  
+  const [categories, setCategories] = useState<DataType[]>(onHandleMapcategories(props.categories))
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false)
+  const [actionParams, setActionParams] = useState(null)
   const columns: ColumnsType<DataType> = useMemo(() => {
     return [
       {
@@ -55,7 +67,7 @@ const Categories: FC<CategoryProp> = memo((props) => {
         width: 100,
         render: (text: any, record: any) => (
           <Button shape="circle" icon={<CiTrash className="text-red-700" />}
-            onClick={() => onHandleDeleting(record)}
+            onClick={() => onShowConfirmModal(record)}
           />
         )
       }
@@ -63,15 +75,49 @@ const Categories: FC<CategoryProp> = memo((props) => {
   }, [])
 
   const onHandleDeleting = (record: any) => {
-    console.log('Deleting', record)
+    CategoryService.deleleCategory(record.id)
+      .then((res) => {
+        if (res) {
+          openNotification(api, 'Category is deleted!', STATUS.SUCCESS as NotificationType)
+          setCategories(_.filter(categories, (item) => 
+            item.id !== record.id
+          ))
+        } else {
+          openNotification(api, 'Category is not deleted!', STATUS.ERROR as NotificationType)
+        }
+      })
+      .finally(() => {
+        setIsConfirmModalOpen(false)
+      })
+  }
+
+  const onShowConfirmModal = (record: any) => {
+    setActionParams(record)
+    setIsConfirmModalOpen(true)
   }
 
   return (
-    <Table
-      columns={columns}
-      dataSource={categories}
-      pagination={{ size: "small", position: [bottom], defaultCurrent: 1, showQuickJumper: true }}
-    />
+    <>
+      {contextHolder}
+      <Table
+        columns={columns}
+        dataSource={categories}
+        pagination={{ size: "small", position: [bottom], defaultCurrent: 1, showQuickJumper: true }}
+      />
+      <ConfirmModal
+        isModalOpen={isConfirmModalOpen}
+        actionParams={actionParams}
+        actionMethod={onHandleDeleting}
+        setIsConfirmModalOpen={setIsConfirmModalOpen}
+        content="Are you sure to delete this category?"
+        title={
+          <div className="flex items-center">
+            <IoWarningOutline className="text-yellow-800" />
+            Delete the task
+          </div>
+        }
+      />
+    </>
   )
 })
 

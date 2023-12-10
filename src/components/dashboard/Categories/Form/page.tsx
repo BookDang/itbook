@@ -5,6 +5,7 @@ import { Button, Form, Input, InputNumber, Select } from "antd"
 import { notification } from 'antd';
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import { NotificationType } from "@/types/antdtypes"
+import { useRouter } from "next/navigation"
 import { FieldType } from "@/types/categorytypes"
 import CategoryService from "@/services/categoryService"
 import { openNotification } from "@/helpers/notification.helper"
@@ -22,7 +23,8 @@ const CategoryForm: FC<CategoryFormProp> = () => {
   const [api, contextHolder] = notification.useNotification()
   const [form] = Form.useForm()
   const [categories, setCategories] = useState<CategoryDB[] | null>(null)
-
+  const router = useRouter()
+  
   useEffect(() => {
     CategoryService.getCategories()
       .then((res) => {
@@ -55,9 +57,7 @@ const CategoryForm: FC<CategoryFormProp> = () => {
     if (res.status === 201) {
       openNotification(api, res.statusText, STATUS.SUCCESS as NotificationType)
       reset()
-      setTimeout(() => {
-        form.resetFields()
-      }, 100)
+      router.push('/dashboard/categories')
     } else if (res.status === 422) {
       openNotification(api, res.statusText, STATUS.WARNING as NotificationType)
     }

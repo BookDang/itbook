@@ -26,16 +26,3 @@ export async function POST(request: NextRequest) {
     )
   }
 }
-
-export async function DELETE(request: NextRequest, params: { categoryId: number }) {
-  try {
-    const {categoryId} = params
-    const response = handlerDeleteCategory(Number(categoryId))
-    return true
-  } catch (error) {
-    return nextResponseJson<any>(
-      { error: "Internal Server Error" },
-      { status: 500, statusText: "Internal Server Error" }
-    )
-  }
-}
