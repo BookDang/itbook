@@ -10,7 +10,7 @@ const loadingReducer = createReducer(
       .addCase(toggleLoading, (state, action) => {
         state.isLoading = action.payload
       })
-      .addDefaultCase((state, action) => {state.isLoading = false})
+      .addDefaultCase((state, action) => {state.isLoading = true})
   }
 )
 
