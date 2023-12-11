@@ -5,6 +5,7 @@ import Layout from 'antd/es/layout/layout'
 import Sider from 'antd/es/layout/Sider'
 import BreadcrumbDash from '@/components/dashboard/Breadcrumb/page'
 import MenuDashboard from '@/components/dashboard/MenuDashboard/page'
+import ProviderLayout from './ProviderLayout'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,18 +20,20 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className}`} style={{margin: '0 !important'}}>
-        <Layout>
-          <Sider theme={'light'} collapsedWidth={65} collapsible>
-            <MenuDashboard />
-          </Sider>
-          <Layout style={{padding: '10px 15px'}} className='h-screen'>
-            <BreadcrumbDash />
-            {children}
-          </Layout>
-        </Layout>
-      </body>
-    </html>
+    <ProviderLayout>
+      <html lang="en">
+          <body className={`${inter.className}`} style={{ margin: '0 !important' }}>
+            <Layout>
+              <Sider theme={'light'} collapsedWidth={65} collapsible>
+                <MenuDashboard />
+              </Sider>
+              <Layout style={{ padding: '10px 15px' }} className='h-screen'>
+                <BreadcrumbDash />
+                {children}
+              </Layout>
+            </Layout>
+          </body>
+        </html>
+    </ProviderLayout>
   )
 }
