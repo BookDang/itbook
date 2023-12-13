@@ -5,11 +5,14 @@ import { Button, Form, Input, InputNumber, Select } from "antd"
 import { notification } from 'antd';
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import { NotificationType } from "@/types/antdtypes"
+import { useRouter } from "next/navigation"
+import { useDispatch } from "react-redux"
 import { FieldType } from "@/types/categorytypes"
 import CategoryService from "@/services/categoryService"
 import { openNotification } from "@/helpers/notification.helper"
 import { STATUS } from "@/constants/statusContants"
 import { Category as CategoryDB } from "@/types/categorytypes"
+import { toggleLoading } from "@/store/features/loading/actions"
 
 type CategoryFormProp = {}
 const defaultValues = {
@@ -22,7 +25,9 @@ const CategoryForm: FC<CategoryFormProp> = () => {
   const [api, contextHolder] = notification.useNotification()
   const [form] = Form.useForm()
   const [categories, setCategories] = useState<CategoryDB[] | null>(null)
-
+  const router = useRouter()
+  const dispatch = useDispatch()
+  
   useEffect(() => {
     CategoryService.getCategories()
       .then((res) => {
@@ -50,14 +55,13 @@ const CategoryForm: FC<CategoryFormProp> = () => {
     form.setFieldsValue({ categoryslug: categorySlugText })
   }, [watchCategoryName, form, setValue])
 
-  const onSubmit: SubmitHandler<FieldType> = async (data) => {
+  const onSubmit: SubmitHandler<FieldType> = async (data: FieldType) => {
     const res = await CategoryService.createCategory(data)
     if (res.status === 201) {
       openNotification(api, res.statusText, STATUS.SUCCESS as NotificationType)
       reset()
-      setTimeout(() => {
-        form.resetFields()
-      }, 100)
+      dispatch(toggleLoading(true))
+      router.push('/dashboard/categories')
     } else if (res.status === 422) {
       openNotification(api, res.statusText, STATUS.WARNING as NotificationType)
     }
