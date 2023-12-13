@@ -1,5 +1,5 @@
 import { Category, Prisma, PrismaClient } from "@prisma/client"
-import { Category as CategoryDB, FieldType } from "@/types/categorytypes"
+import { CategoryChildren, Category as CategoryDB, FieldType } from "@/types/categorytypes"
 
 const prisma = new PrismaClient()
 
@@ -59,13 +59,56 @@ export const handlerGetAllCategories = async (): Promise<CategoryDB[]> => {
 
 export const handlerDeleteCategory = async (categoryId: number) => {
   try {
-    const deleteUser = await prisma.category.delete({
+    const deleteCategory = await prisma.category.delete({
       where: {
         id: categoryId,
       },
     })
-    return deleteUser ? true : false
+    return deleteCategory ? true : false
   } catch (error) {
     return false
+  }
+}
+
+export const handlerGetCategory = async (categoryId: number): Promise<CategoryChildren | null> => {
+  try {
+    const category = await prisma.category.findUnique({
+      where: {
+        id: categoryId,
+      },
+      include: {
+        parent: {
+          select: {
+            name: true,
+            slug: true,
+          },
+        },
+      },
+    })
+    return category as CategoryChildren | null
+  } catch (error) {
+    return null
+  }
+}
+
+export const handlerUpdateCategory = async (
+  formData: FieldType,
+  categoryId: number
+): Promise<Category | null> => {
+  try {
+    const category = await prisma.category.update({
+      where: {
+        id: categoryId,
+      },
+      data: {
+        name: formData.categoryname,
+        slug: formData.categoryslug,
+        parentId: Number(formData.categoryparent),
+        sequence: formData.categorysequence
+      }
+    })
+    return category as Category | null
+  } catch (error) {
+    return null
   }
 }

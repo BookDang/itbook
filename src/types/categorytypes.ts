@@ -24,4 +24,4 @@ type Category = {
   children?: CategoryChildren[]
 } & CategoryChildren
 
-export type { FieldType, Category }
+export type { FieldType, Category, CategoryChildren }

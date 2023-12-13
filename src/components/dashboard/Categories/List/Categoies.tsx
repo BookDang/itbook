@@ -3,8 +3,9 @@ import Table, { ColumnsType, TablePaginationConfig } from "antd/es/table"
 import _ from "lodash"
 import { FC, memo, useMemo, useState } from "react"
 import { Button, notification } from "antd"
-import { CiTrash } from "react-icons/ci"
+import { CiEdit, CiTrash } from "react-icons/ci"
 import { IoWarningOutline } from "react-icons/io5"
+import Link from 'next/link'
 import { NotificationType } from "@/types/antdtypes"
 import { Category as CategoryDB } from "@/types/categorytypes"
 import ConfirmModal from "@/components/ConfirmModal"
@@ -66,9 +67,14 @@ const Categories: FC<CategoryProp> = memo((props) => {
         key: 'action',
         width: 100,
         render: (text: any, record: any) => (
-          <Button shape="circle" icon={<CiTrash className="text-red-700" />}
-            onClick={() => onShowConfirmModal(record)}
-          />
+          <div className="flex gap-3">
+            <Link href={`/dashboard/categories/form?categoryId=` + record.id}>  
+              <Button shape="circle" icon={<CiEdit className="text-red-700" />}/>
+            </Link>
+            <Button shape="circle" icon={<CiTrash className="text-red-700" />}
+              onClick={() => onShowConfirmModal(record)}
+            />
+          </div>
         )
       }
     ]
@@ -112,7 +118,7 @@ const Categories: FC<CategoryProp> = memo((props) => {
         content="Are you sure to delete this category?"
         title={
           <div className="flex items-center">
-            <IoWarningOutline className="text-yellow-800" />
+            <IoWarningOutline className="text-yellow-800 w-4 h-4" />
             Delete the task
           </div>
         }

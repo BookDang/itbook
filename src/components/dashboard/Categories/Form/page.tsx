@@ -7,12 +7,14 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import { NotificationType } from "@/types/antdtypes"
 import { useRouter } from "next/navigation"
 import { useDispatch } from "react-redux"
-import { FieldType } from "@/types/categorytypes"
+import { useSearchParams } from 'next/navigation'
+import { CategoryChildren, FieldType } from "@/types/categorytypes"
 import CategoryService from "@/services/categoryService"
 import { openNotification } from "@/helpers/notification.helper"
 import { STATUS } from "@/constants/statusContants"
 import { Category as CategoryDB } from "@/types/categorytypes"
 import { toggleLoading } from "@/store/features/loading/actions"
+import { RootState } from "@/store/store"
 
 type CategoryFormProp = {}
 const defaultValues = {
@@ -22,18 +24,36 @@ const defaultValues = {
   categorysequence: 1,
 }
 const CategoryForm: FC<CategoryFormProp> = () => {
+  const searchParams = useSearchParams()
   const [api, contextHolder] = notification.useNotification()
   const [form] = Form.useForm()
   const [categories, setCategories] = useState<CategoryDB[] | null>(null)
   const router = useRouter()
   const dispatch = useDispatch()
-  
+  const categoryId: string | null = searchParams.get('categoryId')
+
   useEffect(() => {
-    CategoryService.getCategories()
-      .then((res) => {
-        setCategories(res)
-      })
-      .finally(() => { })
+    dispatch(toggleLoading(true))
+    Promise.all(
+      [
+        CategoryService.getCategories(),
+        CategoryService.getCategory(Number(categoryId))
+      ]
+    ).then((res) => {
+      setCategories(res[0])
+      if (res[1]) {
+        const editFormValues = {
+          categoryname: res[1].name,
+          categoryslug: res[1].slug,
+          categoryparent: Number(res[1].parentId),
+          categorysequence: Number(res[1].sequence),
+        }
+        reset({ ...editFormValues })
+        form.setFieldsValue({ ...editFormValues })
+      }
+    }).finally(() => {
+      dispatch(toggleLoading(false))
+    })
   }, [])
 
   const {
@@ -56,6 +76,28 @@ const CategoryForm: FC<CategoryFormProp> = () => {
   }, [watchCategoryName, form, setValue])
 
   const onSubmit: SubmitHandler<FieldType> = async (data: FieldType) => {
+    if (categoryId) {
+      updateCategory(data)
+    } else {
+      createCategory(data)
+    }
+    
+  }
+
+  const updateCategory = async (data: FieldType) => {
+    const res = await CategoryService.updateCategory(data, Number(categoryId))
+    if (res.status === 200) {
+      openNotification(api, res.statusText, STATUS.SUCCESS as NotificationType)
+      reset()
+      dispatch(toggleLoading(true))
+      router.push('/dashboard/categories')
+    }
+    else {
+      openNotification(api, res.statusText, STATUS.ERROR as NotificationType)
+    }
+  }
+
+  const createCategory = async (data: FieldType) => {
     const res = await CategoryService.createCategory(data)
     if (res.status === 201) {
       openNotification(api, res.statusText, STATUS.SUCCESS as NotificationType)
@@ -140,7 +182,7 @@ const CategoryForm: FC<CategoryFormProp> = () => {
               <Select {...field} value={1}>
                 <Select.Option value={1} key={0}>Root</Select.Option>
                 {
-                  categories?.map((item) => {
+                  categories?.filter(item => item.id !== Number(categoryId))?.map((item) => {
                     return (
                       <Select.Option value={item.id} key={item.id}>
                         {item.name}
