@@ -2,7 +2,7 @@ import { NextRequest } from "next/server"
 import { Category } from "@prisma/client"
 import { handlerDeleteCategory, handlerGetCategory, handlerUpdateCategory } from "@/repositories/categoryRepository"
 import { nextResponseJson } from "@/helpers/http-response.helper"
-import { CategoryChildren, Category as CategoryDB, FieldType } from "@/types/categorytypes"
+import { CategoryChildren } from "@/types/categorytypes"
 
 export async function DELETE(request: NextRequest, { params }: { params: { categoryId: number } }) {
   try {
