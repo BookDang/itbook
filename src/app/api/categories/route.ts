@@ -1,13 +1,12 @@
-import { NextRequest, NextResponse } from "next/server"
+import { Category as CategoryDB } from "@/types/categorytypes"
 import { nextResponseJson } from "@/helpers/http-response.helper"
 import { handlerGetAllCategories } from "@/repositories/categoryRepository"
-import { Category } from "@prisma/client"
 
 export async function GET() {
   try {
-    const result = await handlerGetAllCategories()
-    return nextResponseJson<Category[]>(result, { status: 200, statusText: ''})
+    const result: CategoryDB[] = await handlerGetAllCategories()
+    return nextResponseJson<CategoryDB[]>(result, { status: 200, statusText: ''})
   } catch (error) {
-    return nextResponseJson<Category[]>([], { status: 500, statusText: ''})
+    return nextResponseJson<CategoryDB[]>([], { status: 500, statusText: ''})
   }
 }

@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server"
-import { handlerCreateCategory, handlerDeleteCategory } from "@/repositories/categoryRepository"
+import { handlerCreateCategory } from "@/repositories/categoryRepository"
 import { nextResponseJson } from "@/helpers/http-response.helper"
 import { Category, Prisma } from "@prisma/client"
 

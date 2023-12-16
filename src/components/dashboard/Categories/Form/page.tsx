@@ -8,13 +8,12 @@ import { NotificationType } from "@/types/antdtypes"
 import { useRouter } from "next/navigation"
 import { useDispatch } from "react-redux"
 import { useSearchParams } from 'next/navigation'
-import { CategoryChildren, FieldType } from "@/types/categorytypes"
+import { FieldType } from "@/types/categorytypes"
 import CategoryService from "@/services/categoryService"
 import { openNotification } from "@/helpers/notification.helper"
 import { STATUS } from "@/constants/statusContants"
 import { Category as CategoryDB } from "@/types/categorytypes"
 import { toggleLoading } from "@/store/features/loading/actions"
-import { RootState } from "@/store/store"
 
 type CategoryFormProp = {}
 const defaultValues = {
