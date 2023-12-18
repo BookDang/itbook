@@ -16,14 +16,18 @@ const CategoryContainer: FC<ContainerCategoriesProp> = (): ReactNode => {
   const dispatch = useDispatch()
   
   useEffect(() => {
-    CategoryService.getCategories()
-      .then((res) => {
-        setCategories(res)
-      })
-      .finally(() => {
-        dispatch(toggleLoading(false))
-      })
+    getCategories()
   }, [])
+
+  const getCategories = () => {
+    CategoryService.getCategories()
+    .then((res) => {
+      setCategories(res)
+    })
+    .finally(() => {
+      dispatch(toggleLoading(false))
+    })
+  }
 
   return (
     <div className="wrap-list-categories h-full relative">
@@ -32,7 +36,7 @@ const CategoryContainer: FC<ContainerCategoriesProp> = (): ReactNode => {
           <EmptyData>
             <Empty />
           </EmptyData> : (
-            <Categories categories={categories} />
+            <Categories categories={categories} getCategories={getCategories} />
           )
       }
     </div>
