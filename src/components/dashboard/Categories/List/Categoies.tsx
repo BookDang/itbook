@@ -23,7 +23,9 @@ type DataType = CategoryDB & {
 
 type CategoryProp = {
   categories: CategoryDB[]
+  selectedRowKeys: React.Key[]
   getCategories: () => void
+  setSelectedRowKeys: (params: React.Key[]) => void
 }
 
 const Categories: FC<CategoryProp> = memo((props) => {
@@ -43,7 +45,6 @@ const Categories: FC<CategoryProp> = memo((props) => {
       }
       ), [])
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [bottom] = useState<TablePaginationPosition>('bottomRight')
   const [categories, setCategories] = useState<DataType[]>(onHandleMapcategories(props.categories))
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false)
@@ -90,13 +91,13 @@ const Categories: FC<CategoryProp> = memo((props) => {
   }, [props.categories])
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys);
+    props.setSelectedRowKeys(newSelectedRowKeys);
   }
   const rowSelection = {
-    selectedRowKeys,
+    props,
     onChange: onSelectChange,
   }
-  const hasSelected = selectedRowKeys.length > 0
+  const hasSelected = props.selectedRowKeys.length > 0
 
   const onHandleDeleting = (record: any) => {
     dispatch(toggleLoading(true))
