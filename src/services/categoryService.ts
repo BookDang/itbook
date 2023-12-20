@@ -1,6 +1,7 @@
 import axios from "axios"
-import { Category } from "@prisma/client"
+import { Category, Prisma } from "@prisma/client"
 import { CategoryChildren, Category as CategoryDB, FieldType } from "@/types/categorytypes"
+import { error } from "console"
 
 const createCategory = async (categoryData: FieldType): Promise<any> => {
   try {
@@ -60,12 +61,25 @@ const deleleCategory = async (categoryId: number): Promise<boolean> => {
   }
 }
 
+const deleleCategorys = async (categories: number[]): Promise<Prisma.BatchPayload> => {
+  try {
+    const response = await axios.delete("/api/categories", {data: categories})
+    if (response.status !== 200) {
+      throw new Error()
+    }
+    return response.data
+  } catch (error) {
+    return {count: 0}
+  }
+}
+
 const CategoryService = {
   createCategory,
   getCategory,
   getCategories,
   deleleCategory,
   updateCategory,
+  deleleCategorys
 }
 
 export default CategoryService

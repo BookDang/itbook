@@ -91,10 +91,7 @@ export const handlerGetCategory = async (categoryId: number): Promise<CategoryCh
   }
 }
 
-export const handlerUpdateCategory = async (
-  formData: FieldType,
-  categoryId: number
-): Promise<Category | null> => {
+export const handlerUpdateCategory = async (formData: FieldType, categoryId: number): Promise<Category | null> => {
   try {
     const category = await prisma.category.update({
       where: {
@@ -104,11 +101,26 @@ export const handlerUpdateCategory = async (
         name: formData.categoryname,
         slug: formData.categoryslug,
         parentId: Number(formData.categoryparent),
-        sequence: formData.categorysequence
-      }
+        sequence: formData.categorysequence,
+      },
     })
     return category as Category | null
   } catch (error) {
     return null
+  }
+}
+
+export const handlerDeleteManyCategoris = async (categories: number[]): Promise<Prisma.BatchPayload> => {
+  try {
+    const deleteCategory = await prisma.category.deleteMany({
+      where: {
+        id: {
+          in: categories,
+        },
+      },
+    })
+    return deleteCategory
+  } catch (error) {
+    return {count: 0}
   }
 }
