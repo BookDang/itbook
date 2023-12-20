@@ -33,7 +33,7 @@ const CategoryContainer: FC<ContainerCategoriesProp> = (): ReactNode => {
 
   return (
     <>
-      <Action selectedRowKeys={selectedRowKeys} />
+      <Action selectedRowKeys={selectedRowKeys} getCategories={getCategories} />
       <div className="wrap-list-categories h-full relative">
         {
           categories?.length === 0 ?
