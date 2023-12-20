@@ -88,7 +88,7 @@ const Categories: FC<CategoryProp> = memo((props) => {
 
   useEffect(() => {
     setCategories(onHandleMapcategories(props.categories))
-  }, [props.categories])
+  }, [props.categories, onHandleMapcategories])
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     props.setSelectedRowKeys(newSelectedRowKeys);
@@ -146,4 +146,5 @@ const Categories: FC<CategoryProp> = memo((props) => {
   )
 })
 
+Categories.displayName = 'Categories'
 export default Categories

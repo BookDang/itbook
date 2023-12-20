@@ -31,6 +31,17 @@ const CategoryForm: FC<CategoryFormProp> = () => {
   const dispatch = useDispatch()
   const categoryId: string | null = searchParams.get('categoryId')
 
+  const {
+    handleSubmit,
+    reset,
+    control,
+    watch,
+    setValue,
+    formState: { isDirty, isValid, isSubmitting }
+  } = useForm<FieldType>({
+    defaultValues,
+  })
+  
   useEffect(() => {
     dispatch(toggleLoading(true))
     Promise.all(
@@ -53,18 +64,7 @@ const CategoryForm: FC<CategoryFormProp> = () => {
     }).finally(() => {
       dispatch(toggleLoading(false))
     })
-  }, [])
-
-  const {
-    handleSubmit,
-    reset,
-    control,
-    watch,
-    setValue,
-    formState: { isDirty, isValid, isSubmitting }
-  } = useForm<FieldType>({
-    defaultValues,
-  })
+  }, [categoryId, dispatch, form, reset])
 
   const watchCategoryName: string = watch("categoryname") || ''
 

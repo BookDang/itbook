@@ -1,7 +1,7 @@
 'use client'
 
 import Empty from "antd/es/empty"
-import { FC, ReactNode, useEffect, useState } from "react"
+import { FC, ReactNode, useCallback, useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import CategoryService from "@/services/categoryService"
 import EmptyData from "@/components/dashboard/Categories/List/EmptyData"
@@ -17,11 +17,7 @@ const CategoryContainer: FC<ContainerCategoriesProp> = (): ReactNode => {
   const [categories, setCategories] = useState<CategoryDB[]>([])
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    getCategories()
-  }, [])
-
-  const getCategories = () => {
+  const getCategories = useCallback(() => {
     CategoryService.getCategories()
       .then((res) => {
         setCategories(res)
@@ -29,7 +25,12 @@ const CategoryContainer: FC<ContainerCategoriesProp> = (): ReactNode => {
       .finally(() => {
         dispatch(toggleLoading(false))
       })
-  }
+  }, [dispatch])
+
+  useEffect(() => {
+    getCategories()
+  }, [getCategories])
+
 
   return (
     <>
