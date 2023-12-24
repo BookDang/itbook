@@ -14,10 +14,11 @@ import { toggleLoading } from '@/store/features/loading/actions'
 import CategoryService from '@/services/categoryService'
 import { openNotification } from "@/helpers/notification.helper"
 import { STATUS } from '@/constants/statusContants'
+import { fetchCategories } from '@/store/features/category/actions'
+import { AppDispatch } from '@/store/store'
 
 type ActionProps = {
   selectedRowKeys: React.Key[]
-  getCategories: () => void
 }
 const Action: FC<ActionProps> = (props) => {
   const router = useRouter()
@@ -25,7 +26,7 @@ const Action: FC<ActionProps> = (props) => {
   const href = '/dashboard/categories/form'
   return (
     <div className="flex gap-5 justify-end fixed right-4 top-1.5 w-fit">
-      <RemoveAllCategories selectedRowKeys={props.selectedRowKeys} getCategories={props.getCategories} />
+      <RemoveAllCategories selectedRowKeys={props.selectedRowKeys} />
       <Button shape="circle" icon={<PlusOutlined />}
         onClick={() => router.push(href)}
         className={`border-0 bg-transparent shadow-none ${checkActivePath(href) ? '' : 'hover:rotate-90 hover:border'}`}
@@ -39,12 +40,12 @@ export default Action
 
 type RemoveAllCategoriesProps = {
   selectedRowKeys: React.Key[]
-  getCategories: () => void
 }
 const RemoveAllCategories: FC<RemoveAllCategoriesProps> = (props) => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   const [api, contextHolder] = notification.useNotification()
+
 
   const onHandleDeletingAll = () => {
     dispatch(toggleLoading(true))
@@ -53,7 +54,8 @@ const RemoveAllCategories: FC<RemoveAllCategoriesProps> = (props) => {
         if (res.count) {
           CategoryService.getCategories()
             .then(() => {
-              props.getCategories()
+              dispatch(fetchCategories())
+              dispatch(toggleLoading(true))
             })
           openNotification(api, '', STATUS.SUCCESS as NotificationType)
         } else {
