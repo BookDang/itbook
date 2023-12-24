@@ -39,3 +39,6 @@ To seed the database, run the db seed CLI command: `npx prisma db seed`
   - tailwind
   - prisma*
   - Redux Toolkit
+
+
+`npm install redux react-redux redux-thunk @types/react-redux`

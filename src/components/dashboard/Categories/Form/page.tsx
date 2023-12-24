@@ -80,7 +80,6 @@ const CategoryForm: FC<CategoryFormProp> = () => {
     } else {
       createCategory(data)
     }
-    
   }
 
   const updateCategory = async (data: FieldType) => {

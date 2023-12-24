@@ -14,6 +14,8 @@ import CategoryService from "@/services/categoryService"
 import { openNotification } from "@/helpers/notification.helper"
 import { STATUS } from "@/constants/statusContants"
 import { toggleLoading } from "@/store/features/loading/actions"
+import { AppDispatch } from "@/store/store"
+import { fetchCategories } from "@/store/features/category/actions"
 
 type TablePaginationPosition = NonNullable<TablePaginationConfig['position']>[number]
 
@@ -24,7 +26,6 @@ type DataType = CategoryDB & {
 type CategoryProp = {
   categories: CategoryDB[]
   selectedRowKeys: React.Key[]
-  getCategories: () => void
   setSelectedRowKeys: (params: React.Key[]) => void
 }
 
@@ -49,7 +50,7 @@ const Categories: FC<CategoryProp> = memo((props) => {
   const [categories, setCategories] = useState<DataType[]>(onHandleMapcategories(props.categories))
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false)
   const [actionParams, setActionParams] = useState(null)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   
   const columns: ColumnsType<DataType> = useMemo(() => {
     return [
@@ -105,12 +106,12 @@ const Categories: FC<CategoryProp> = memo((props) => {
       .then((res) => {
         if (res) {
           openNotification(api, 'Category is deleted! ' + record.id, STATUS.SUCCESS as NotificationType)
-          props.getCategories()
         } else {
           openNotification(api, 'Category is not deleted!', STATUS.ERROR as NotificationType)
         }
       })
       .finally(() => {
+        dispatch(fetchCategories())
         setIsConfirmModalOpen(false)
       })
   }

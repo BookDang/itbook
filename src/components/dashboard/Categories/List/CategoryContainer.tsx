@@ -2,46 +2,44 @@
 
 import Empty from "antd/es/empty"
 import { FC, ReactNode, useCallback, useEffect, useState } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import CategoryService from "@/services/categoryService"
 import EmptyData from "@/components/dashboard/Categories/List/EmptyData"
 import Categories from "@/components/dashboard/Categories/List/Categoies"
 import { Category as CategoryDB } from "@/types/categorytypes"
 import { toggleLoading } from "@/store/features/loading/actions"
 import Action from "@/components/dashboard/Categories/Action"
+import { AppDispatch, RootState } from "@/store/store"
+import { fetchCategories } from "@/store/features/category/actions"
 
 type ContainerCategoriesProp = {}
 
 const CategoryContainer: FC<ContainerCategoriesProp> = (): ReactNode => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
-  const [categories, setCategories] = useState<CategoryDB[]>([])
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
+  const categoriesStore = useSelector((state: RootState) => state.category)
 
-  const getCategories = useCallback(() => {
-    CategoryService.getCategories()
-      .then((res) => {
-        setCategories(res)
-      })
-      .finally(() => {
-        dispatch(toggleLoading(false))
-      })
+  useEffect(() => {
+    dispatch(toggleLoading(true))
+    dispatch(fetchCategories())
   }, [dispatch])
 
   useEffect(() => {
-    getCategories()
-  }, [getCategories])
-
+    setTimeout(() => {
+      dispatch(toggleLoading(false))
+    }, 150);
+  }, [categoriesStore])
 
   return (
     <>
-      <Action selectedRowKeys={selectedRowKeys} getCategories={getCategories} />
+      <Action selectedRowKeys={selectedRowKeys} />
       <div className="wrap-list-categories h-full relative">
         {
-          categories?.length === 0 ?
+          (categoriesStore.categories?.length === 0 || categoriesStore.error) ?
             <EmptyData>
               <Empty />
             </EmptyData> : (
-              <Categories categories={categories} getCategories={getCategories} 
+              <Categories categories={categoriesStore.categories}
                 setSelectedRowKeys={setSelectedRowKeys}
                 selectedRowKeys={selectedRowKeys}
               />
